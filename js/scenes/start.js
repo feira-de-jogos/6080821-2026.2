@@ -16,8 +16,6 @@ class Start extends Phaser.Scene {
         this.scene.start("Preloader");
       });
   }
-
-  update() {}
 }
 
 export default Start;
