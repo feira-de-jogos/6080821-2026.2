@@ -5,23 +5,26 @@ class Preloader extends Phaser.Scene {
 
   init() {
     this.add.image(400, 225, "start-background");
-    
+
     this.add.rectangle(400, 300, 468, 32).setStrokeStyle(1, 0xffffff);
     const bar = this.add.rectangle(400 - 230, 300, 4, 28, 0xffffff);
-    
+
     this.load.on("progress", (progress) => {
       bar.width = 4 + 460 * progress;
     });
   }
-  
+
   preload() {
     this.load.setPath("./assets/");
-    this.load.image("ederson", "ederson.png");
+    this.load.spritesheet("ederson", "ederson.png", {
+      frameWidth: 64,
+      frameHeight: 64,
+    });
   }
 
-  create() { 
+  create() {
     this.scene.stop();
-    this.scene.start("Level-1")
+    this.scene.start("Level1");
   }
 }
 
