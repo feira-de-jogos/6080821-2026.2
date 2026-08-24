@@ -149,6 +149,10 @@ class Level1 extends Phaser.Scene {
         this.player.play("player-stop", true);
       }
     });
+
+    // collisions
+    this.layerObjects.setCollisionByProperty({ collides: true });
+    this.physics.add.collider(this.player, this.layerObjects);
   }
 
   update() {
