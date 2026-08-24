@@ -8,20 +8,30 @@ class Level1 extends Phaser.Scene {
   }
 
   create() {
+    // lights
+    this.lights.enable().setAmbientColor(0x101010);
+
+    // map
     this.tilemap = this.make.tilemap({ key: "map" });
 
+    // tilesets
     this.tilesetGrass = this.tilemap.addTilesetImage("grass");
     this.tilesetShadows = this.tilemap.addTilesetImage("shadows");
     this.tilesetItems = this.tilemap.addTilesetImage("items");
 
-    this.layerFloor = this.tilemap.createLayer("floor", [this.tilesetGrass]);
-    this.layerShadows = this.tilemap.createLayer("shadows", [
-      this.tilesetShadows,
-    ]);
-    this.layerObjects = this.tilemap.createLayer("objects", [
-      this.tilesetItems,
-    ]);
+    // layers
+    this.layerFloor = this.tilemap
+      .createLayer("floor", [this.tilesetGrass])
+      .setLighting(true);
+    this.layerShadows = this.tilemap
+      .createLayer("shadows", [this.tilesetShadows])
+      .setLighting(true);
+    this.layerObjects = this.tilemap
+      .createLayer("objects", [this.tilesetItems])
+      .setLighting(true);
 
+    // animations
+    // stop
     this.anims.create({
       key: "player-stop",
       frames: this.anims.generateFrameNumbers("ederson", {
@@ -30,7 +40,7 @@ class Level1 extends Phaser.Scene {
       }),
       frameRate: 1,
     });
-
+    // up
     this.anims.create({
       key: "player-up",
       frames: this.anims.generateFrameNumbers("ederson", {
@@ -40,7 +50,7 @@ class Level1 extends Phaser.Scene {
       frameRate: 12,
       repeat: -1,
     });
-
+    // down
     this.anims.create({
       key: "player-down",
       frames: this.anims.generateFrameNumbers("ederson", {
@@ -50,7 +60,7 @@ class Level1 extends Phaser.Scene {
       frameRate: 12,
       repeat: -1,
     });
-
+    // left
     this.anims.create({
       key: "player-left",
       frames: this.anims.generateFrameNumbers("ederson", {
@@ -60,7 +70,7 @@ class Level1 extends Phaser.Scene {
       frameRate: 12,
       repeat: -1,
     });
-
+    // right
     this.anims.create({
       key: "player-right",
       frames: this.anims.generateFrameNumbers("ederson", {
@@ -71,9 +81,21 @@ class Level1 extends Phaser.Scene {
       repeat: -1,
     });
 
-    this.player = this.physics.add.sprite(400, 300, "ederson", 14);
+    // player
+    this.player = this.physics.add
+      .sprite(400, 300, "ederson", 14)
+      .setLighting(true);
+
+    // player backlight
+    this.backlight = this.lights
+      .addLight(this.player.x, this.player.y, 200)
+      .setColor(0xffffff)
+      .setIntensity(2);
+
+    // camera
     this.cameras.main.startFollow(this.player);
 
+    // joystick
     this.joystick = this.plugins.get("rexvirtualjoystickplugin").add(this, {
       x: 100,
       y: 350,
@@ -94,7 +116,6 @@ class Level1 extends Phaser.Scene {
 
         const x = this.direction.x * this.speed;
         const y = this.direction.y * this.speed;
-
         this.player.setVelocity(x, y);
 
         switch (true) {
@@ -128,6 +149,12 @@ class Level1 extends Phaser.Scene {
         this.player.play("player-stop", true);
       }
     });
+  }
+
+  update() {
+    // backlight position
+    this.backlight.x = this.player.x;
+    this.backlight.y = this.player.y;
   }
 }
 
