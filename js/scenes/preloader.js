@@ -18,14 +18,20 @@ class Preloader extends Phaser.Scene {
     this.load.setPath("./assets/");
 
     // level 1
+    //
+    // map
     this.load.tilemapTiledJSON("map", "map/map.json");
     this.load.image("grass", "map/grass.png");
     this.load.image("shadows", "map/shadows.png");
     this.load.image("items", "map/items.png");
+    //
+    // player
     this.load.spritesheet("ederson", "ederson.png", {
       frameWidth: 64,
       frameHeight: 64,
     });
+    //
+    // plugin
     this.load.plugin(
       "rexvirtualjoystickplugin",
       "../js/rexvirtualjoystickplugin.min.js",
