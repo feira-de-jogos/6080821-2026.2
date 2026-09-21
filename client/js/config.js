@@ -21,6 +21,10 @@ const config = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
+  mqtt: {
+    brokerUrl: "wss://test.mosquitto.org:8081/mqtt",
+    topicPrefix: "6080821-2026.2",
+  },
 };
 
 export default config;

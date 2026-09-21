@@ -153,12 +153,39 @@ class Level1 extends Phaser.Scene {
     // collisions
     this.layerObjects.setCollisionByProperty({ collides: true });
     this.physics.add.collider(this.player, this.layerObjects);
+
+    // mqtt
+    this.mqtt = this.registry.get("mqtt");
+    this.lastPublish = 0;
+    this.publishInterval = 100;
+
+    this.onPlayerMove = (data) => this.handlePlayerMove(data);
+    this.mqtt.on("message:level1/#", this.onPlayerMove);
+    this.mqtt.subscribe("level1/#");
+
+    this.events.on("shutdown", () => {
+      this.mqtt.off("message:level1/#", this.onPlayerMove);
+    });
   }
 
-  update() {
+  handlePlayerMove(data) {
+    if (data.clientId === this.mqtt.clientId) return;
+    console.log(`Received player move from client "${data.clientId}":`, data);
+  }
+
+  update(time) {
     // backlight position
     this.backlight.x = this.player.x;
     this.backlight.y = this.player.y;
+
+    // publish player position at a throttled rate
+    if (time - this.lastPublish > this.publishInterval) {
+      this.lastPublish = time;
+      this.mqtt.publish("level1/player-move", {
+        x: this.player.x,
+        y: this.player.y,
+      });
+    }
   }
 }
 
