@@ -182,8 +182,11 @@ class Level1 extends Phaser.Scene {
     if (time - this.lastPublish > this.publishInterval) {
       this.lastPublish = time;
       this.mqtt.publish("level1/player-move", {
+        clientId: this.mqtt.clientId,
         x: this.player.x,
         y: this.player.y,
+        texture: this.player.texture.key,
+        frame: this.player.frame.name,
       });
     }
   }

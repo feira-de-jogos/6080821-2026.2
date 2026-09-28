@@ -3,7 +3,7 @@ const mqtt = require("mqtt");
 const BROKER_URL =
   process.env.MQTT_BROKER_URL || "wss://test.mosquitto.org:8081/mqtt";
 const topicPrefix = process.env.MQTT_TOPIC_PREFIX || "6080821-2026.2";
-const TOPIC = process.env.MQTT_TOPIC || `${topicPrefix}/server`;
+const TOPIC = process.env.MQTT_TOPIC || `${topicPrefix}/agent/template`;
 
 const client = mqtt.connect(BROKER_URL);
 

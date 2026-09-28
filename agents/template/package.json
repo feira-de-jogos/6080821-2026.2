@@ -3,6 +3,6 @@
     "mqtt": "^5.16.0"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node agent.js"
   }
 }
