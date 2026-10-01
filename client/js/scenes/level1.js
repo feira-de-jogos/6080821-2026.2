@@ -159,18 +159,24 @@ class Level1 extends Phaser.Scene {
     this.lastPublish = 0;
     this.publishInterval = 100;
 
-    this.onPlayerMove = (data) => this.handlePlayerMove(data);
-    this.mqtt.on("message:level1/#", this.onPlayerMove);
-    this.mqtt.subscribe("level1/#");
+    this.mqtt.on("message:agents/score", (data) => {
+      console.log(
+        `Received score update from client "${data.clientId}":`,
+        data.score,
+      );
+    });
+    this.mqtt.subscribe("agents/score");
+
+    this.mqtt.on("message:level1/player-move", (data) => {
+      if (data.clientId === this.mqtt.clientId) return;
+      console.log(`Received player move from client "${data.clientId}":`, data);
+    });
+    this.mqtt.subscribe("level1/player-move");
 
     this.events.on("shutdown", () => {
+      this.mqtt.off("message:agents/score", this.onScoreUpdate);
       this.mqtt.off("message:level1/#", this.onPlayerMove);
     });
-  }
-
-  handlePlayerMove(data) {
-    if (data.clientId === this.mqtt.clientId) return;
-    console.log(`Received player move from client "${data.clientId}":`, data);
   }
 
   update(time) {
